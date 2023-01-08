@@ -1,0 +1,82 @@
+create table cutaxi (sl int, d_name char(50), dl int, age int, taxi char(30), taxino char(10), kmrange int, price float);
+insert into cutaxi values (1, 'Dopinder', 777, 26, 'Yellow', 'DL-01-B-12', 89, null);
+insert into cutaxi values (2, 'Jarvis', 666, 24, 'Yellow', 'DL-01-B-12', 156, null);
+insert into cutaxi values (3, 'Holmes', 555, 26, 'Yellow', 'DL-01-B-12', 222, null);
+insert into cutaxi values (4, 'Max', 869, 26, 'Yellow', 'DL-01-B-12', 467, null);
+select * from cutaxi;
+-- drop table cutaxi;
+
+declare 
+    cnt int;
+    fare float;
+    km int;
+    base float := 2000;
+    bill float;
+    tot_bill float;
+    dl int;
+begin
+    cnt := totalTaxi();
+    for i in 1..cnt loop
+        select ct.kmrange into km from cutaxi ct where ct.sl=i;
+        -- dbms_output.put_line(km);
+        updPrice(i,km,fare,base,bill,tot_bill);
+    end loop;
+end;
+
+
+-- procedure to calculate fare
+create or replace procedure updPrice
+(i in int, km out int, fare out float, base out float, bill out float, tot_bill out float)
+is   
+begin
+        select ct.kmrange into km from cutaxi ct where ct.sl=i;
+        base:=2000;
+        dbms_output.put_line(km|| ' hello');
+        if (km<=10) then
+        bill := base + km*15;
+        elsif(km<=100) then
+        bill := base + 10*15 + (km-10)*14;
+        elsif (km<=500) then
+        bill := base + 10*15 + 90*14 + (km-100)*12;
+        elsif (km<=1000) then
+        bill := base + 10*15 + 90*14 + 400*12 + (km-500)*10;
+        end if;
+
+        dbms_output.put_line(bill);
+
+        bill := bill + bill*0.18;
+        tot_bill := bill + bill*0.2;
+        dbms_output.put_line(tot_bill);
+
+        update cutaxi ct set price=tot_bill where ct.sl=i;
+end;
+
+-- function to count total number of taxis
+create or replace function totalTaxi 
+return number is 
+total_taxi integer := 0;
+begin
+select count(*) into total_taxi from cutaxi;
+return total_taxi;
+end;
+
+
+-- DECLARE
+--     tot_emp NUMBER;
+-- BEGIN
+--     SELECT Count(*)
+--     INTO   tot_emp
+--     FROM   employees e
+--            join departments d
+--              ON e.department_id = d.department_id
+--     WHERE  e.department_id = 50;
+
+--     dbms_output.Put_line ('The employees are in the department 50: '
+--                           ||To_char(tot_emp));
+
+--     IF tot_emp >= 45 THEN
+--       dbms_output.Put_line ('There are no vacancies in the department 50.');
+--     ELSE
+--       dbms_output.Put_line ('There are some vacancies in department 50.');
+--     END IF;
+-- END; 

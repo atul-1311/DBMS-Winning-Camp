@@ -1,0 +1,25 @@
+create table num (sl int, num1 int, num2 int, n_sum int);
+
+create or replace function fillNum (x in integer, y in integer)
+return integer is
+n_sum integer := 0;
+begin 
+n_sum := x+y;
+return n_sum;
+end;
+
+declare
+sl integer;
+num1 integer;
+num2 integer;
+n_sum integer;
+begin
+for i in 1..100 loop
+num1 := 2*i;
+num2 := 5*i;
+n_sum := fillNum(num1,num2);
+insert into num values (i,num1,num2,n_sum);
+end loop;
+end;
+
+select * from num;
