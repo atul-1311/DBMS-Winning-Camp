@@ -1,0 +1,24 @@
+create table customers (id int, name char(20), age int, address char(30), salary int);
+insert into customers values(1, 'Ramesh', 23, 'Allahabad', 20000);
+insert into customers values(2, 'Suresh', 22, 'Kanpur', 22000);
+insert into customers values(3, 'Mahesh', 24, 'Ghaziabad', 24000);
+insert into customers values(4, 'Chandan', 25, 'Noida', 26000);
+insert into customers values(5, 'Alex', 21, 'Paris', 28000);
+insert into customers values(6, 'Sunita', 20, 'Delhi', 30000);
+
+declare 
+c_id customers.id%type := 8;
+c_name customers.name%type;
+c_addr customers.address%type;
+begin
+select name,address into c_name,c_addr
+from customers
+where id=c_id;
+dbms_output.put_line('Name: '|| c_name);
+dbms_output.put_line('Address: '|| c_addr);
+exception
+when no_data_found then
+    dbms_output.put_line('No such customer.');
+when others then
+    dbms_output.put_line('Error!');
+end;
