@@ -1,0 +1,38 @@
+-- function to check if a triangle or not
+
+create or replace function triangle(x in integer, y in integer, z in integer)
+return boolean is
+ans boolean;
+begin
+if(x+y>z) then
+    if(y+z>x) then
+        if(x+z>y) then
+            ans:=true;
+        else
+            ans:=false;
+        end if;
+    else
+        ans:=false;
+    end if;
+else
+ans:=false;
+end if;
+return ans;
+end;
+
+declare
+x integer;
+y integer;
+z integer;
+ans boolean;
+begin
+x := 3;
+y := 4;
+z := 5;
+ans := triangle(x,y,z);
+if (ans=true) then
+dbms_output.put_line('It is a triangle');
+else
+dbms_output.put_line('It is not a triangle');
+end if;
+end;
