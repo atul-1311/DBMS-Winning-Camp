@@ -1,0 +1,45 @@
+create table customers (id int, name char(20), age int, address char(30), salary int);
+insert into customers values(1, 'Ramesh', 23, 'Allahabad', 20000);
+insert into customers values(2, 'Suresh', 22, 'Kanpur', 22000);
+insert into customers values(3, 'Mahesh', 24, 'Ghaziabad', 24000);
+insert into customers values(4, 'Chandan', 25, 'Noida', 26000);
+insert into customers values(5, 'Alex', 21, 'Paris', 28000);
+insert into customers values(6, 'Sunita', 20, 'Delhi', 30000);
+
+
+-- implicit cursor to update the customer salary
+declare
+    total_rows_affected integer;
+begin
+    update customers set salary = salary+1000;
+    if sql%notfound then
+    dbms_output.put_line('No rows affected.');
+    elsif sql%found then
+    total_rows_affected := sql%rowcount;
+    dbms_output.put_line('Total rows affected : '||total_rows_affected);
+    end if;
+end;
+
+
+-- explicit cursor to print data
+
+declare
+    c_id customers.id%type;
+    c_name customers.name%type;
+    c_add customers.address%type;
+
+    -- cursor definition
+    cursor cur_customers is
+        select id,name,address from customers;
+begin
+    -- curson opening
+    open cur_customers;
+    loop
+        -- fetch from cursor
+        fetch cur_customers into c_id,c_name,c_add;
+        exit when cur_customers%notfound;
+        dbms_output.put_line(c_name||' '||c_add);
+    end loop;
+    -- close cursor
+    close cur_customers;
+end;
