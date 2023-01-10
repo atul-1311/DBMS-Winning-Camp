@@ -1,0 +1,31 @@
+create table emp_detail (emp_id integer, f_name char(10), l_name char(10), salary integer, dept_id integer);
+insert into emp_detail values (1, 'Shruti', 'Shrabya', 50000, 1);
+insert into emp_detail values (2, 'Jaya', 'Singh', 10000, 2);
+insert into emp_detail values (3, 'Mangala', 'Thokal', 60000, 3);
+insert into emp_detail values (4, 'Surendra', 'Maurya', 70000, 4);
+
+create table department(dqpt_id integer, dept_name char(20), manager_id integer);
+insert into department values (1, 'Accounting', 1);
+insert into department values (2, 'Shipping', 3);
+insert into department values (3, 'Store', 3);
+
+-- exlicit cursor to print the employee details
+
+declare
+    cursor cur_emp is
+    select emp_id,f_name,l_name,salary,dept_id from
+    emp_detail;
+
+    e_row_detail cur_emp%ROWTYPE;
+
+begin
+    open cur_emp;
+    loop
+        fetch cur_emp into e_row_detail;
+        exit when cur_emp%notfound;
+        dbms_output.put_line('Employee '||e_row_detail.emp_id||' : '||e_row_detail.f_name||' '||
+                                e_row_detail.l_name||' '||e_row_detail.salary);
+    end loop;
+    dbms_output.put_line('Total number of rows affected : '||cur_emp%rowcount);
+    close cur_emp;
+end;     

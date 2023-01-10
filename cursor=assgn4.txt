@@ -1,0 +1,27 @@
+create table emp_detail (emp_id integer, f_name char(10), l_name char(10), salary integer, dept_id integer);
+insert into emp_detail values (1, 'Shruti', 'Shrabya', 50000, 1);
+insert into emp_detail values (2, 'Jaya', 'Singh', 10000, 2);
+insert into emp_detail values (3, 'Mangala', 'Thokal', 60000, 3);
+insert into emp_detail values (4, 'Surendra', 'Maurya', 70000, 4);
+
+create table department(dept_id integer, dept_name char(20), manager_id integer);
+insert into department values (1, 'Accounting', 1);
+insert into department values (2, 'Shipping', 3);
+insert into department values (3, 'Store', 3);
+
+-- Write a PL/SQL block to create a explicit cursor using For Loop
+-- and display the employees who have salary greater than 48000.
+
+DECLARE
+CURSOR c_detail IS
+ SELECT dept_name,d.dept_id,f_name,salary
+ FROM department d JOIN emp_detail e
+ ON e.dept_id = d.dept_id
+ WHERE salary > 48000;
+BEGIN
+ FOR item IN c_detail
+ LOOP
+DBMS_OUTPUT.PUT_LINE(item.f_name||' '||item.dept_name||'
+'||item.dept_id||' '||' '||item.salary);
+ END LOOP;
+END;

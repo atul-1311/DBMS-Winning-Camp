@@ -1,0 +1,49 @@
+create table emp_detail (emp_id integer, f_name char(10), l_name char(10), salary integer, dept_id integer);
+insert into emp_detail values (1, 'Shruti', 'Shrabya', 50000, 1);
+insert into emp_detail values (2, 'Jaya', 'Singh', 10000, 2);
+insert into emp_detail values (3, 'Mangala', 'Thokal', 60000, 3);
+insert into emp_detail values (4, 'Surendra', 'Maurya', 70000, 4);
+
+create table department(dept_id integer, dept_name char(20), manager_id integer);
+insert into department values (1, 'Accounting', 1);
+insert into department values (2, 'Shipping', 3);
+insert into department values (3, 'Store', 3);
+
+drop table department;
+
+DECLARE
+CURSOR c_dept IS
+ SELECT *
+ FROM department
+ WHERE manager_id IS NOT NULL
+ ORDER BY dept_name;
+ r_dept c_dept%ROWTYPE;
+--Declaration of department cursor and record variable.
+
+ CURSOR c_emp (c_dept_no department.dept_id%TYPE) IS
+ SELECT *
+ FROM emp_detail
+ WHERE dept_id = c_dept_no;
+ r_emp c_emp%ROWTYPE;
+--Declaration of employees cursor and record variable.
+
+BEGIN
+ OPEN c_dept;
+ LOOP
+ FETCH c_dept INTO r_dept;
+ EXIT WHEN c_dept%NOTFOUND;
+ DBMS_OUTPUT.PUT_LINE('----------------------------------');
+ DBMS_OUTPUT.PUT_LINE('Department Name : '||r_dept.dept_name);
+ DBMS_OUTPUT.PUT_LINE('----------------------------------');
+ OPEN c_emp(r_dept.dept_id);
+ LOOP
+ FETCH c_emp INTO r_emp;
+ EXIT WHEN c_emp%NOTFOUND;
+ DBMS_OUTPUT.PUT_LINE('Employees Details :
+'||r_emp.emp_id
+||' '||r_emp.f_name||' '||r_emp.l_name||' '||r_emp.salary);
+ END LOOP;
+ CLOSE c_emp;
+ END LOOP;
+ CLOSE c_dept;
+END;
