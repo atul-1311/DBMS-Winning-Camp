@@ -1,0 +1,27 @@
+create table Emp (id int, EmployeeName char(30), Salary int, Bonus int);
+insert into Emp values (1, 'Ramesh', 25000, 500);
+insert into Emp values (2, 'Suresh', 30000, 800);
+insert into Emp values (3, 'Hrithik', 20000, 200);
+insert into Emp values (4, 'Sharaz', 30000, 900);
+insert into Emp values (5, 'Harsh', 65000, 400);
+select * from emp;
+
+-- excpetion for return employees having salary given in the table
+-- too_many_rows exception
+-- no_data_found exception
+
+declare
+e_name Emp.EmployeeName%type;
+e_sal Emp.Salary%type := 30000;
+begin
+select EmployeeName into e_name from Emp
+where salary=e_sal;
+dbms_output.put_line('Employee Name : '|| e_name);
+exception
+when no_data_found then
+    dbms_output.put_line('No such Employee.');
+when too_many_rows then
+    dbms_output.put_line('More than one employee.');
+when others then
+    dbms_output.put_line('Error !');
+end;
