@@ -1,0 +1,23 @@
+create table customers (id int, name char(20), age int, address char(30), salary int);
+insert into customers values(1, 'Ramesh', 23, 'Allahabad', 20000);
+insert into customers values(2, 'Suresh', 22, 'Kanpur', 22000);
+insert into customers values(3, 'Mahesh', 24, 'Ghaziabad', 24000);
+insert into customers values(4, 'Chandan', 25, 'Noida', 26000);
+insert into customers values(5, 'Alex', 21, 'Paris', 28000);
+insert into customers values(6, 'Sunita', 20, 'Delhi', 30000);
+
+update customers set salary=salary+1000 where salary>24000;
+
+-- trigger on dml operations
+create or replace trigger display_salary_changes
+before delete or insert or update on customers
+for each row
+when (new.id>0)
+declare
+    sal_diff integer;
+begin
+    sal_diff := :new.salary - :old.salary;
+    dbms_output.put_line('old salary : '|| :old.salary);
+    dbms_output.put_line('new salary : '|| :new.salary);
+    dbms_output.put_line('salary difference : '|| sal_diff);
+end;
